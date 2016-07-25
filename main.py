@@ -85,7 +85,7 @@ def main():
                         slot_info[slot_name][MUST_BE_FILLED_KEY] = False
 
     # Construct LP problem.
-    problem = LpProblem('16fa OH Assignments', LpMaximize)
+    problem = LpProblem('Schedule', LpMaximize)
     num_rows = len(people_names)
     num_columns = len(slot_names)
 
