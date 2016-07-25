@@ -3,7 +3,7 @@ import csv
 from pulp import *
 
 DEFAULT_PRIORITY = 1
-DEFAULT_CAPACITY = 1
+DEFAULT_CAPACITY = 2
 DEFAULT_MUST_BE_FILLED = False
 PRIORITY_KEY = 'priority'
 CAPACITY_KEY = 'capacity'
