@@ -23,9 +23,9 @@ A Python script that assigns busy people into limited timeslots for you.
 
 ##### Create CSV files
 
-Copy and fill in [availability.csv](data/availability.csv) with information about each person's availability.
+1. Copy and fill in [availability.csv](data/availability.csv) with information about each person's availability.
 
-(Option) Copy and fill out [slot_info.csv](data/csv_info.csv) with information about the timeslots.
+2. (Optional) Copy and fill out [slot_info.csv](data/csv_info.csv) with information about the timeslots.
 
 ##### Run the program
 
