@@ -2,13 +2,23 @@ import csv
 
 from pulp import *
 
-
-PERSON_NAME_COLUMN_NUM = 1
-AVAILABILITY_START_NUM = 2
-AVAILABILITY_END_NUM = 17
+DEFAULT_PRIORITY = 1
+DEFAULT_CAPACITY = 1
+DEFAULT_MUST_BE_FILLED = False
+PRIORITY_KEY = 'priority'
+CAPACITY_KEY = 'capacity'
+MUST_BE_FILLED_KEY = 'must be filled'
+AVAILABLE_STRING = 'available'
+PREFERRED_STRING = 'preferred'
 
 
 def main():
+    availability_csv_filename = sys.argv[1]
+    if len(sys.argv) == 3:
+        slot_info_csv_filename = sys.argv[2]
+    else:
+        slot_info_csv_filename = None
+
     people_names = []  # People names.
     slot_names = []  # OH assignment names.
     slot_info = {}
@@ -16,53 +26,65 @@ def main():
     variables = []
 
     # Extract row names, column names, and coefficients from CSV file.
-    with open('data/oh_preferences.csv', 'rb') as csv_infile:
+    with open(availability_csv_filename, 'rb') as csv_infile:
         csv_reader = csv.reader(csv_infile)
 
-        header_column = next(csv_reader)
-        start = AVAILABILITY_START_NUM
-        end = AVAILABILITY_END_NUM + 1
-        for i, column_name in enumerate(header_column[start:end]):
-            splice_start = column_name.index('[') + 1
-            splice_end = column_name.index(']')
-            slot_name = column_name[splice_start:splice_end]
+        header_row = next(csv_reader)
+        for i, slot_name in enumerate(header_row[1:]):
             slot_names.append(slot_name)
 
         for i, row in enumerate(csv_reader):
-            person_name = row[PERSON_NAME_COLUMN_NUM]
+            person_name = row[0]
             people_names.append(person_name)
 
-            start = AVAILABILITY_START_NUM
-            end = AVAILABILITY_END_NUM + 1
+            # Convert to lowercase.
+            row = [x.lower() for x in row]
+
             coefficients_row = []
-            for availability in row[start:end]:
+            for availability in row[1:]:
                 coefficient = 0
-                if availability == 'Available':
+                if availability == AVAILABLE_STRING:
                     coefficient = 1
-                elif availability == 'Preferred':
+                elif availability == PREFERRED_STRING:
                     coefficient = 2
                 coefficients_row.append(coefficient)
             coefficients.append(coefficients_row)
 
+    # Insert default slot info.
+    for slot_name in slot_names:
+        slot_info[slot_name] = {}
+        slot_info[slot_name][PRIORITY_KEY] = DEFAULT_PRIORITY
+        slot_info[slot_name][CAPACITY_KEY] = DEFAULT_CAPACITY
+        slot_info[slot_name][MUST_BE_FILLED_KEY] = DEFAULT_MUST_BE_FILLED
+
     # Extract slot info.
-    with open('data/slot_info.csv', 'rb') as csv_infile:
-        csv_reader = csv.reader(csv_infile)
-        next(csv_reader)
+    if slot_info_csv_filename is not None:
+        with open(slot_info_csv_filename, 'rb') as csv_infile:
+            csv_reader = csv.reader(csv_infile)
 
-        for i, row in enumerate(csv_reader):
-            slot_name = row[0]
-            slot_info[slot_name] = {}
-            slot_info[slot_name]['index'] = slot_names.index(slot_name)
-            slot_info[slot_name]['priority'] = float(row[1])
-            slot_info[slot_name]['capacity'] = int(row[2])
-            if int(row[3]) == 1:
-                slot_info[slot_name]['must_be_filled'] = True
-            else:
-                slot_info[slot_name]['must_be_filled'] = False
+            header_row = [x.lower() for x in next(csv_reader)]
+            priority_index = header_row.index(PRIORITY_KEY)
+            capacity_index = header_row.index(CAPACITY_KEY)
+            must_be_filled_index = header_row.index(MUST_BE_FILLED_KEY)
 
-    # Normalize priorities.
+            for i, row in enumerate(csv_reader):
+                slot_name = row[0]
 
-    # Constrct LP problem.
+                # Convert to lowercase.
+                row = [x.lower() for x in row]
+                if priority_index != -1:
+                    slot_info[slot_name][PRIORITY_KEY] = \
+                        float(row[priority_index])
+                if capacity_index != -1:
+                    slot_info[slot_name][CAPACITY_KEY] = \
+                        int(row[capacity_index])
+                if must_be_filled_index != -1:
+                    if row[must_be_filled_index] == 'x':
+                        slot_info[slot_name][MUST_BE_FILLED_KEY] = True
+                    else:
+                        slot_info[slot_name][MUST_BE_FILLED_KEY] = False
+
+    # Construct LP problem.
     problem = LpProblem('16fa OH Assignments', LpMaximize)
     num_rows = len(people_names)
     num_columns = len(slot_names)
@@ -94,9 +116,9 @@ def main():
         for i in range(0, num_rows):
             d[variables[i][j]] = 1
 
-        capacity = slot_info[slot_names[j]]['capacity']
+        capacity = slot_info[slot_names[j]][CAPACITY_KEY]
         sense = LpConstraintLE
-        if slot_info[slot_names[j]]['must_be_filled']:
+        if slot_info[slot_names[j]][MUST_BE_FILLED_KEY]:
             sense = LpConstraintEQ
 
         exp = LpAffineExpression(d)
@@ -137,7 +159,7 @@ def main():
         problem += constraint
 
     # Save LP to file.
-    problem.writeLP("data/oh_assignments.lp")
+    problem.writeLP('assignments.lp')
 
     # Try to solve LP.
     problem.solve()
@@ -146,7 +168,7 @@ def main():
 
     if LpStatus[problem.status] == 'Optimal':
 
-        print '** TA ASSIGNMENTS:'
+        print '** PEOPLE ASSIGNMENTS:'
         for i in range(0, num_rows):
             for j in range(0, num_columns):
                 if int(value(variables[i][j])) == 1:
