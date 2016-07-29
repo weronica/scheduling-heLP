@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-A Python script that assigns busy people into limited timeslots for you.
+A Python script that assigns people to timeslots for you using a linear program.
 
 ## Setting up
 
@@ -37,8 +37,8 @@ The rows of the CSV file are the timeslots, and the columns are additional piece
 
 All of these columns are optional. Any subset can appear in any order in `slot_info.csv`. Any unspecified values will be assigned the default value.
 
-##### Run the program
+## Running the script
 
     $ python main.py <availaibility.csv> [slot_info.csv]
 
-If the given constraints produce a linear program with an infeasible region, then you must relax constaints until there is a feasible region.
+If the given constraints produce a linear program with an infeasible region, then you must relax constaints until there is a feasible region. Unfortunately, why a LP's region is infeasible is more opaque that you might want. Future versions of this project might make suggestions as to how to make the region feasible, but the current version does not.
