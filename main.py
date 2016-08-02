@@ -12,6 +12,7 @@ NAME_KEY = 'name'
 INDEX_KEY = 'index'
 ROLE_KEY = 'role'
 CAPACITY_KEY = 'capacity'
+MAX_ASSIGNMENTS_KEY = 'maximum-assignments'
 AVAILABLE_STRING = 'available'
 PREFERRED_STRING = 'preferred'
 NOT_AVAILABLE_STRING = 'not available'
@@ -39,7 +40,7 @@ def main():
         csv_reader = csv.reader(csv_infile)
 
         header_row = next(csv_reader)
-        for i, pretty_slot_name in enumerate(header_row[2:]):
+        for i, pretty_slot_name in enumerate(header_row[1:]):
             ugly_slot_name = uglify_name(pretty_slot_name)
             slot_names.append(ugly_slot_name)
             slot_info[ugly_slot_name] = {}
@@ -62,7 +63,7 @@ def main():
             row = [x.lower() for x in row]
 
             coefficients_row = []
-            for availability in row[2:]:
+            for availability in row[1:]:
                 coefficient = 0
                 if availability == AVAILABLE_STRING:
                     coefficient = 1
@@ -75,6 +76,12 @@ def main():
     for ugly_slot_name in slot_names:
         for role in role_names:
             slot_info[ugly_slot_name][CAPACITY_KEY][role] = DEFAULT_CAPACITY
+
+    # Insert default role, maximum assignments info.
+    for ugly_person_name in people_names:
+        people_info[ugly_person_name][ROLE_KEY] = DEFAULT_ROLE
+        people_info[ugly_person_name][MAX_ASSIGNMENTS_KEY] = \
+            DEFAULT_MAX_ASSIGNMENTS
 
     # Extract slot info.
     if slot_info_csv_filename is not None:
@@ -97,108 +104,129 @@ def main():
                 for role_name, capacity_index in capacity_indices.iteritems():
                     slot_info[ugly_slot_name][CAPACITY_KEY][role_name] = row[capacity_index]
 
-    # Construct LP problem.
-    problem = LpProblem('Schedule', LpMaximize)
-    num_rows = len(people_names)
-    num_columns = len(slot_names)
+    # Extract person info.
+    if person_info_csv_filename is not None:
+        with open(person_info_csv_filename, 'rb') as csv_infile:
+            csv_reader = csv.reader(csv_infile)
 
-    # Construct LP variables.
-    for i, row in enumerate(coefficients):
-        variables.append([0] * len(row))
-        for j, cell in enumerate(row):
-            variables[i][j] = LpVariable(
-                ('x_(%d,%d)' % (i, j)),
-                0,
-                1,
-                LpInteger
-            )
+            header_row = [x.lower() for x in next(csv_reader)]
+            print header_row
+            role_index = header_row.index('role')
+            max_assignments_index = header_row.index('maximum assignments')
 
-    # Construct objective function.
-    d = {}
-    for i in range(0, num_rows):
-        for j in range(0, num_columns):
-            d[variables[i][j]] = coefficients[i][j]
-    exp = LpAffineExpression(d)
-    problem.objective = exp
+            for i, row in enumerate(csv_reader):
+                pretty_person_name = row[0]
+                ugly_person_name = uglify_name(pretty_person_name)
 
-    # Construct constraints.
+                if role_index != -1:
+                    people_info[ugly_person_name][ROLE_KEY] = row[role_index]
+                if max_assignments_index != -1:
+                    people_info[ugly_person_name][MAX_ASSIGNMENTS_KEY] = \
+                        row[max_assignments_index]
 
-    # Capacity constraints for each slot and for each role.
-    for j in range(0, num_columns):  # Slots.
-        for role in role_names:
-            d = {}
-            for i in range(0, num_rows):  # People.
-                person = people_names[i]
-                if people_info[person][ROLE_KEY] == role:
-                    d[variables[i][j]] = 1
 
-            capacity = slot_info[slot_names[j]][role][CAPACITY_KEY]
-
-            exp = LpAffineExpression(d)
-            constraint = LpConstraint(
-                e=exp,
-                sense=LpConstraintLE,
-                name='At most %d people with role %s in slot %d' %
-                     (capacity, role, j),
-                rhs=capacity
-            )
-            problem += constraint
-
-    # Person constraints for total number of slots to which they can be
-    # assigned.
-    for i in range(0, num_rows):  # People.
-        person = people_names[i]
-        capacity =
-        d = {}
-        for j in range(0, num_columns):  # Slots.
-            d[variables[i][j]] = 1
-        exp = LpAffineExpression(d)
-        constraint = LpConstraint(
-            e=exp,
-            sense=LpConstraintLE,
-            name='%s is assigned to at most %d slot(s)' % person,
-            rhs=1
-        )
-        problem += constraint
-
-    # Everyone must be assigned to a slot in which they are available.
-    for i in range(0, num_rows):
-        d = {}
-        for j in range(0, num_columns):
-            d[variables[i][j]] = coefficients[i][j]
-        exp = LpAffineExpression(d)
-        constraint = LpConstraint(
-            e=exp,
-            sense=LpConstraintGE,
-            name='Person %i is assigned to a slot when they are available' % i,
-            rhs=1
-        )
-        problem += constraint
-
-    # Save LP to file.
-    problem.writeLP('assignments.lp')
-
-    # Try to solve LP.
-    problem.solve()
-
-    print 'Status: %s\n' % LpStatus[problem.status]
-
-    if LpStatus[problem.status] == 'Optimal':
-
-        print '** PEOPLE ASSIGNMENTS:'
-        for i in range(0, num_rows):
-            for j in range(0, num_columns):
-                if int(value(variables[i][j])) == 1:
-                    print '%s: %s' % (people_names[i].ljust(20), slot_names[j])
-        print '\n'
-
-        print '** SLOT ASSIGNMENTS:'
-        for j in range(0, num_columns):
-            print '%s:' % slot_names[j]
-            for i in range(0, num_rows):
-                if int(value(variables[i][j])) == 1:
-                    print '- %s' % people_names[i]
-            print '\n'
+    # # Construct LP problem.
+    # problem = LpProblem('Schedule', LpMaximize)
+    # num_rows = len(people_names)
+    # num_columns = len(slot_names)
+    #
+    # # Construct LP variables.
+    # for i, row in enumerate(coefficients):
+    #     variables.append([0] * len(row))
+    #     for j, cell in enumerate(row):
+    #         variables[i][j] = LpVariable(
+    #             ('x_(%d,%d)' % (i, j)),
+    #             0,
+    #             1,
+    #             LpInteger
+    #         )
+    #
+    # # Construct objective function.
+    # d = {}
+    # for i in range(0, num_rows):
+    #     for j in range(0, num_columns):
+    #         d[variables[i][j]] = coefficients[i][j]
+    # exp = LpAffineExpression(d)
+    # problem.objective = exp
+    #
+    # # Construct constraints.
+    #
+    # # Capacity constraints for each slot and for each role.
+    # for j in range(0, num_columns):  # Slots.
+    #     for role in role_names:
+    #         d = {}
+    #         for i in range(0, num_rows):  # People.
+    #             person = people_names[i]
+    #             if people_info[person][ROLE_KEY] == role:
+    #                 d[variables[i][j]] = 1
+    #
+    #         capacity = slot_info[slot_names[j]][role][CAPACITY_KEY]
+    #
+    #         exp = LpAffineExpression(d)
+    #         constraint = LpConstraint(
+    #             e=exp,
+    #             sense=LpConstraintLE,
+    #             name='At most %d people with role %s in slot %d' %
+    #                  (capacity, role, j),
+    #             rhs=capacity
+    #         )
+    #         problem += constraint
+    #
+    # # Person constraints for total number of slots to which they can be
+    # # assigned.
+    # for i in range(0, num_rows):  # People.
+    #     person = people_names[i]
+    #     capacity =
+    #     d = {}
+    #     for j in range(0, num_columns):  # Slots.
+    #         d[variables[i][j]] = 1
+    #     exp = LpAffineExpression(d)
+    #     constraint = LpConstraint(
+    #         e=exp,
+    #         sense=LpConstraintLE,
+    #         name='%s is assigned to at most %d slot(s)' % person,
+    #         rhs=1
+    #     )
+    #     problem += constraint
+    #
+    # # Everyone must be assigned to a slot in which they are available.
+    # for i in range(0, num_rows):
+    #     d = {}
+    #     for j in range(0, num_columns):
+    #         d[variables[i][j]] = coefficients[i][j]
+    #     exp = LpAffineExpression(d)
+    #     constraint = LpConstraint(
+    #         e=exp,
+    #         sense=LpConstraintGE,
+    #         name='Person %i is assigned to a slot when they are available' % i,
+    #         rhs=1
+    #     )
+    #     problem += constraint
+    #
+    # # Save LP to file.
+    # problem.writeLP('assignments.lp')
+    #
+    # # Try to solve LP.
+    # problem.solve()
+    #
+    # print 'Status: %s\n' % LpStatus[problem.status]
+    #
+    # if LpStatus[problem.status] == 'Optimal':
+    #
+    #     print '** PEOPLE ASSIGNMENTS:'
+    #     for i in range(0, num_rows):
+    #         for j in range(0, num_columns):
+    #             if int(value(variables[i][j])) == 1:
+    #                 print '%s: %s' % (people_names[i].ljust(20), slot_names[j])
+    #     print '\n'
+    #
+    #     print '** SLOT ASSIGNMENTS:'
+    #     for j in range(0, num_columns):
+    #         print '%s:' % slot_names[j]
+    #         for i in range(0, num_rows):
+    #             if int(value(variables[i][j])) == 1:
+    #                 print '- %s' % people_names[i]
+    #         print '\n'
 
 
 def uglify_name(pretty_name):
