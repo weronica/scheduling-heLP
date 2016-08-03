@@ -1,23 +1,21 @@
-Name,Slot 1,Slot 2,Slot 3,Slot 4,Slot 5,Slot 6,Slot 7,Slot 8,Slot 9,Slot 10,Slot 11,Slot 12,Slot 13,Slot 14,Slot 15,Slot 16,Slot 17
-Person 1,Available,Available,Preferred,Preferred,Preferred,Preferred,Preferred,Preferred,Available,Preferred,Not available,Preferred,Not available,Available,Not available,Not available,Not available
-Person 2,Not available,Not available,Available,Available,Preferred,Available,Available,Preferred,Available,Available,Available,Available,Available,Not available,Not available,Not available,Not available
-Person 3,Preferred,Not available,Preferred,Not available,Preferred,Available,Not available,Not available,Not available,Preferred,Not available,Available,Not available,Available,Not available,Available,Available
-Person 4,Not available,Not available,Preferred,Available,Not available,Preferred,Available,Not available,Preferred,Preferred,Not available,Preferred,Available,Available,Not available,Not available,Not available
-Person 5,Available,Preferred,Available,Preferred,Not available,Available,Available,Not available,Available,Preferred,Not available,Available,Available,Preferred,Available,Available,Available
-Person 6,Available,Preferred,Available,Preferred,Not available,Not available,Preferred,Not available,Available,Available,Available,Not available,Available,Available,Available,Available,Available
-Person 7,Preferred,Available,Preferred,Available,Available,Preferred,Available,Not available,Available,Available,Not available,Not available,Available,Available,Available,Available,Available
-Person 8,Not available,Not available,Preferred,Preferred,Preferred,Preferred,Available,Not available,Not available,Preferred,Not available,Preferred,Available,Available,Available,Available,Available
-Person 9,Available,Available,Preferred,Preferred,Preferred,Preferred,Preferred,Not available,Preferred,Preferred,Not available,Preferred,Preferred,Not available,Not available,Available,Available
-Person 10,Available,Available,Available,Available,Not available,Available,Available,Available,Available,Available,Not available,Available,Available,Available,Available,Available,Available
-Person 11,Available,Available,Available,Available,Not available,Available,Available,Not available,Not available,Available,Not available,Available,Available,Available,Available,Preferred,Preferred
-Person 12,Available,Available,Available,Not available,Preferred,Preferred,Not available,Available,Available,Available,Not available,Available,Available,Not available,Not available,Not available,Not available
-Person 13,Available,Preferred,Preferred,Not available,Not available,Available,Available,Not available,Preferred,Not available,Not available,Available,Not available,Not available,Not available,Available,Available
-Person 14,Preferred,Not available,Preferred,Preferred,Not available,Available,Available,Preferred,Preferred,Preferred,Not available,Available,Available,Not available,Not available,Available,Preferred
-Person 15,Available,Available,Available,Not available,Not available,Available,Available,Available,Available,Available,Not available,Not available,Not available,Not available,Not available,Not available,Not available
-Person 16,Preferred,Preferred,Available,Available,Not available,Not available,Available,Not available,Available,Available,Not available,Not available,Not available,Available,Not available,Preferred,Preferred
-Person 17,Available,Available,Available,Available,Not available,Not available,Available,Not available,Available,Available,Not available,Preferred,Preferred,Available,Available,Available,Available
-Person 18,Available,Available,Preferred,Preferred,Not available,Not available,Not available,Not available,Preferred,Preferred,Not available,Available,Preferred,Available,Available,Available,Available
-Person 19,Available,Available,Not available,Not available,Preferred,Preferred,Preferred,Not available,Preferred,Available,Not available,Preferred,Preferred,Available,Available,Available,Available
-Person 20,Available,Available,Not available,Available,Not available,Not available,Preferred,Not available,Not available,Not available,Not available,Available,Preferred,Available,Available,Available,Available
-Person 21,Available,Available,Not available,Not available,Available,Available,Available,Available,Available,Available,Available,Available,Available,Available,Available,Available,Available
-Person 22,Preferred,Preferred,Preferred,Preferred,Not available,Preferred,Not available,Not available,Available,Not available,Not available,Preferred,Preferred,Available,Available,Available,Available
+Name,Slot 1,Slot 2,Slot 3,Slot 4,Slot 5,Slot 6,Slot 7,Slot 8,Slot 9,Slot 10
+Person 1,Available,Available,Preferred,Preferred,Preferred,Preferred,Preferred,Preferred,Available,Preferred
+Person 2,Not available,Not available,Available,Available,Preferred,Available,Available,Preferred,Available,Available
+Person 3,Preferred,Not available,Preferred,Not available,Preferred,Available,Not available,Not available,Not available,Preferred
+Person 4,Not available,Not available,Preferred,Available,Not available,Preferred,Available,Not available,Preferred,Preferred
+Person 5,Available,Preferred,Available,Preferred,Not available,Available,Available,Not available,Available,Preferred
+Person 6,Available,Preferred,Available,Preferred,Not available,Not available,Preferred,Not available,Available,Available
+Person 7,Preferred,Available,Preferred,Available,Available,Preferred,Available,Not available,Available,Available
+Person 8,Not available,Not available,Preferred,Preferred,Preferred,Preferred,Available,Not available,Not available,Preferred
+Person 9,Available,Available,Preferred,Preferred,Preferred,Preferred,Preferred,Not available,Preferred,Preferred
+Person 10,Available,Available,Available,Available,Not available,Available,Available,Available,Available,Available
+Person 11,Available,Available,Available,Available,Not available,Available,Available,Not available,Not available,Available
+Person 12,Available,Available,Available,Not available,Preferred,Preferred,Not available,Available,Available,Available
+Person 13,Available,Preferred,Preferred,Not available,Not available,Available,Available,Not available,Preferred,Not available
+Person 14,Preferred,Not available,Preferred,Preferred,Not available,Available,Available,Preferred,Preferred,Preferred
+Person 15,Available,Available,Available,Not available,Not available,Available,Available,Available,Available,Available
+Person 16,Preferred,Preferred,Available,Available,Not available,Not available,Available,Not available,Available,Available
+Person 17,Available,Available,Available,Available,Not available,Not available,Available,Not available,Available,Available
+Person 18,Available,Available,Preferred,Preferred,Not available,Not available,Not available,Not available,Preferred,Preferred
+Person 19,Available,Available,Not available,Not available,Preferred,Preferred,Preferred,Not available,Preferred,Available
+Person 20,Available,Available,Not available,Available,Not available,Not available,Preferred,Not available,Not available,Not available

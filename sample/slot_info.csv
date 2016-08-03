@@ -1,18 +1,11 @@
-Name,Priority,Capacity,Must be filled
-"Slot 1",1,2,
-"Slot 2",1,2,
-"Slot 3",1,2,
-"Slot 4",1,2,
-"Slot 5",1,2,
-"Slot 6",1,2,
-"Slot 7",1,2,
-"Slot 8",2,2,X
-"Slot 9",2,1,X
-"Slot 10",2,2,X
-"Slot 11",2,2,X
-"Slot 12",2,2,X
-"Slot 13",2,2,X
-"Slot 14",1,2,
-"Slot 15",1,2,
-"Slot 16",1,2,
-"Slot 17",1,2,
+Name,Role A - Capacity,Role B - Capacity
+Slot 1,2,0
+Slot 2,0,2
+Slot 3,1,1
+Slot 4,1,1
+Slot 5,1,1
+Slot 6,1,1
+Slot 7,1,1
+Slot 8,2,0
+Slot 9,0,1
+Slot 10,1,2
