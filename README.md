@@ -23,19 +23,19 @@ A Python script that assigns people to timeslots for you
 
 ##### Create CSV files
 
-1. Copy and fill in [`availability.csv`](sample/availability.csv) with each person's availability in each timeslot.
+1. Copy and fill in [`availability.csv`](sample_data/availability.csv) with each person's availability in each timeslot.
 
     Columns of this CSV file are the timeslots, and rows are the people being scheduled into the timeslots. For each `(person, timeslot)` pair, `person` should indicate their availability for `timeslot` (either `Preferred`, `Available`, or `Not available`).
 
-2. Copy and fill in [`slot_info.csv`](sample/slot_info.csv) with information about each slot.
+2. Copy and fill in [`slot_info.csv`](sample_data/slot_info.csv) with information about each slot.
 
-    Rows of this CSV file are slots, and columns are additional pieces of information that should be provided about each timeslot. The names of the timeslots must exactly match the column names in [`availability.csv`](sample/availability.csv). Additional slot information that should be provided is as follows:
+    Rows of this CSV file are slots, and columns are additional pieces of information that should be provided about each timeslot. The names of the timeslots must exactly match the column names in [`availability.csv`](sample_data/availability.csv). Additional slot information that should be provided is as follows:
 
     - `Role name - Capacity` - the number of people with role `Role name` that can be assigned to this timeslot. If there are _n_ possible roles for people, then there should be _n_ `Role name - Capacity` columns. These columns can appear in any order.
 
-3. Copy and fill out [`people_info.csv`](sample/people_info.csv) with information about each person. 
+3. Copy and fill out [`people_info.csv`](sample_data/people_info.csv) with information about each person. 
 
-    Rows of this CSV file are people, and columns are additional pieces of information that should be provided about each person. The names of the timeslots must exactly match the row names in [`availability.csv`](sample/availability.csv). Additional person information that should be provided is as follows:
+    Rows of this CSV file are people, and columns are additional pieces of information that should be provided about each person. The names of the timeslots must exactly match the row names in [`availability.csv`](sample_data/availability.csv). Additional person information that should be provided is as follows:
     
     - `Role` - This person's role. If there is only one possible role, then a generic role like `Person` suffices. Possible roles might include `Teacher`, `Student`, or `Tutor`.
     - `Maximum assignments` - The maximum number of slots to which this person should be assigned. If each person should only be assigned to 1 slot, then `Maximum assignments` is `1`. If a person can be assigned to at most _n_ slots, then `Maximum assignments` is `n`.
