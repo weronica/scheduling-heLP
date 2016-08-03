@@ -91,6 +91,7 @@ def main():
             header_row = next(csv_reader)
             capacity_indices = {}
             for i, column_name in enumerate(header_row):
+                print column_name
                 if column_name.split()[-1].lower() == CAPACITY_KEY:
                     role_name = column_name.split('-')[0].strip()
                     capacity_indices[role_name] = i
@@ -231,7 +232,8 @@ def main():
             for i in range(0, num_rows):
                 if int(value(variables[i][j])) == 1:
                     pretty_person_name = people_info[people_names[i]][NAME_KEY]
-                    print '- %s' % pretty_person_name
+                    role = people_info[people_names[i]][ROLE_KEY]
+                    print '- %s (%s)' % (pretty_person_name, role)
             print '\n'
 
 
