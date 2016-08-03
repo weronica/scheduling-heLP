@@ -77,7 +77,7 @@ This script is not magic 🎇. It is backed by a [linear program](https://en.wik
     |   x  |      |  x   |  x   |  x   |
     |   x  |      |  x   |  x   |  x   |
 
-    If a less-desirable assignment occurs, then you should remove one of the not-full slots from the set of possible slots and re-run the script with the updated CSV files.
+    If a less-desirable assignment occurs, then you should **remove one of the not-full slots** from the set of possible slots (or simply mark everyone as `Not available`) during that time. Then re-run the script with the updated CSV files.
 
 ## Contact
 
